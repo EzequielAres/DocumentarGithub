@@ -32,8 +32,8 @@ class UserController(Resource):
     @flask_praetorian.roles_required("admin")
     def put(self, user_id):
         # create User instance from json data located in request body
-        new_user = UserSchema().load(request.json)
         # test id mismatch
+        new_user = UserSchema().load(request.json)
         if str(new_user.id) != user_id:
             abort(400, "id mismatch")
         # just creating the User instance, data is saved with commit

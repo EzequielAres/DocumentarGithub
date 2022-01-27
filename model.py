@@ -37,37 +37,100 @@ def seed_db(app, guard):
             Role(name="editor"),
             Role(name="user")
         ]
+
+        teams = [
+            Team(name="Equipo1", imagen=app.root_path + "/imagenes/anon.jpg"),
+            Team(name="Equipo2", imagen=app.root_path + "/imagenes/anon.jpg"),
+            Team(name="Equipo3", imagen=app.root_path + "/imagenes/anon.jpg"),
+            Team(name="Equipo4", imagen=app.root_path + "/imagenes/anon.jpg"),
+            Team(name="Equipo5", imagen=app.root_path + "/imagenes/anon.jpg")
+        ]
+
         users = [
-            User(username="juan", email="juan@a.a",
-                 hashed_password=guard.hash_password("pestillo"),
-                 roles=[roles[1]]),
-            User(username="maria", email="maria@a.a",
+            User(username="Ezequiel", email="ezequiel@ejemplo.com",
                  hashed_password=guard.hash_password("pestillo"),
                  roles=[roles[0]]),
-            User(username="ana", email="ana@a.a",
-                 hashed_password=guard.hash_password("pestillo"),
-                 roles=[roles[0], roles[1]]),
-            User(username="selena", email="selena@a.a",
+            User(username="Paco", email="paco@ejemplo.com",
                  hashed_password=guard.hash_password("pestillo"),
                  roles=[roles[2]]),
+            User(username="Ana", email="ana@ejemplo.com",
+                 hashed_password=guard.hash_password("pestillo"),
+                 roles=[roles[0], roles[1]]),
+            User(username="María", email="maria@ejemplo.com",
+                 hashed_password=guard.hash_password("pestillo"),
+                 roles=[roles[2]]),
+            User(username="Rocío", email="rocio@ejemplo.com",
+                 hashed_password=guard.hash_password("pestillo"),
+                 roles=[roles[0]]),
+            User(username="Carmen", email="carmen@ejemplo.com",
+                 hashed_password=guard.hash_password("pestillo"),
+                 roles=[roles[1]]),
+            User(username="Rafael", email="rafael@ejemplo.com",
+                 hashed_password=guard.hash_password("pestillo"),
+                 roles=[roles[2]]),
+            User(username="Jose", email="jose@ejemplo.com",
+                 hashed_password=guard.hash_password("pestillo"),
+                 roles=[roles[2], roles[1]]),
+            User(username="Pablo", email="Pablo@ejemplo.com",
+                 hashed_password=guard.hash_password("pestillo"),
+                 roles=[roles[0]]),
+            User(username="Alex", email="alex@ejemplo.com",
+                 hashed_password=guard.hash_password("pestillo"),
+                 roles=[roles[1]])
         ]
-        owners = [
-            Owner(name="Juan Pérez", user=users[0]),
-            Owner(name="María López", user=users[1]),
+
+        players = [
+            Player(name="Ezequiel", user=users[0], puntos=0, teams=[teams[0], teams[1]], imagen=app.root_path + "/imagenes/anon.jpg", location_id=1),
+            Player(name="Paco", user=users[1], puntos=0, teams=[teams[0]], imagen=app.root_path + "/imagenes/anon.jpg", location_id=1),
+            Player(name="Ana", user=users[2], puntos=0, teams=[teams[1], teams[2]], imagen=app.root_path + "/imagenes/anon.jpg", location_id=2),
+            Player(name="María", user=users[3], puntos=0, teams=[teams[0], teams[1], teams[2]], imagen=app.root_path + "/imagenes/anon.jpg", location_id=2),
+            Player(name="Rocío", user=users[4], puntos=0, teams=[teams[2], teams[1]], imagen=app.root_path + "/imagenes/anon.jpg", location_id=3),
+            Player(name="Carmen", user=users[5], puntos=0, teams=[teams[4], teams[1]], imagen=app.root_path + "/imagenes/anon.jpg", location_id=4),
+            Player(name="Rafael", user=users[6], puntos=0, teams=[teams[4], teams[3]], imagen=app.root_path + "/imagenes/anon.jpg", location_id=5),
+            Player(name="Jose", user=users[7], puntos=0, teams=[teams[3], teams[2]], imagen=app.root_path + "/imagenes/anon.jpg", location_id=6),
+            Player(name="Pablo", user=users[8], puntos=0, teams=[teams[4], teams[0]], imagen=app.root_path + "/imagenes/anon.jpg", location_id=7),
+            Player(name="Alex", user=users[9], puntos=0, teams=[teams[2], teams[3]], imagen=app.root_path + "/imagenes/anon.jpg", location_id=8)
         ]
-        pets = [
-            Pet(name="Estrella", species="Perro", breed="Caniche", owner=owners[0]),
-            Pet(name="Petardo", species="Perro", breed="Galgo", owner=owners[1]),
-            Pet(name="Nala", species="Perro", breed="Galgo", owner=owners[1]),
-            Pet(name="Mora", species="Gato", breed="Egipcio", owner=owners[1]),
+
+        locations = [
+            Location(name="Cádiz", region_id=1),
+            Location(name="Chiclana", region_id=1),
+            Location(name="San Fernando", region_id=1),
+            Location(name="Alcorcón", region_id=2),
+            Location(name="Horta", region_id=3),
+            Location(name="Amares", region_id=4),
+            Location(name="Stuttgart", region_id=5),
+            Location(name="Flensburgo", region_id=6)
         ]
+
+        regions = [
+            Region(name="Andalucía", country_id=1),
+            Region(name="Madrid", country_id=1),
+            Region(name="Açores", country_id=2),
+            Region(name="Braga", country_id=2),
+            Region(name="Baden-Wurtemberg", country_id=3),
+            Region(name="Schleswig-Holstein", country_id=3)
+        ]
+
+        countries= [
+            Country(name="España"),
+            Country(name="Portugal"),
+            Country(name="Alemania"),
+        ]
+
         # add data from lists
         for user in users:
             db.session.add(user)
-        for owner in owners:
-            db.session.add(owner)
-        for pet in pets:
-            db.session.add(pet)
+        for player in players:
+            db.session.add(player)
+        for team in teams:
+            db.session.add(team)
+        for location in locations:
+            db.session.add(location)
+        for region in regions:
+            db.session.add(region)
+        for country in countries:
+            db.session.add(country)
         # commit changes in database
         db.session.commit()
 
@@ -180,35 +243,93 @@ class Role(db.Model):
         return f"<Role {self.name}>"
 
 
-class Owner(db.Model):
-    """
-    Owner entity
+team_players = db.Table('team_players',
+                        db.Column('team_id', db.Integer, db.ForeignKey('team.id'), primary_key=True),
+                        db.Column('player_id', db.Integer, db.ForeignKey('player.id'), primary_key=True)
+                        )
 
-    Store owner data
+
+class Player(db.Model):
+    """
+    Player entity
+
+    Store player data
     """
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=False, nullable=False)
+    puntos = db.Column(db.Integer, nullable=False)
+    imagen = db.Column(db.String(150), unique=False, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     # TODO: test cascade behaviour
-    user = db.relationship("User", backref=db.backref("owner", uselist=False))
+    user = db.relationship("User", backref=db.backref("player", uselist=False))
+
+    teams = db.relationship('Team', secondary=team_players)
+    is_active = db.Column(db.Boolean, default=True, server_default="true")
+
+    location_id = db.Column(db.Integer, db.ForeignKey('location.id'))
+    # TODO: test cascade behaviour
+    location = db.relationship("Location", backref="Player")
 
     def __repr__(self):
         return f"<User {self.name}>"
 
 
-class Pet(db.Model):
+class Team(db.Model):
     """
-    Pet entity
+     Team entity
 
-    Store pet data
+     Store team data
+    """
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80), unique=True, nullable=False)
+    imagen = db.Column(db.String(150), unique=False, nullable=False)
+
+    def __repr__(self):
+        return f"<User {self.name}>"
+
+class Location(db.Model):
+    """
+    Location entity
+
+    Store location data
     """
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), unique=False, nullable=False)
-    species = db.Column(db.String(80), unique=False, nullable=True)
-    breed = db.Column(db.String(80), unique=False, nullable=True)
-    owner_id = db.Column(db.Integer, db.ForeignKey('owner.id'))
+    name = db.Column(db.String(100), unique=True, nullable=False)
+
+    region_id = db.Column(db.Integer, db.ForeignKey('region.id'))
     # TODO: test cascade behaviour
-    owner = db.relationship("Owner", backref="pets")
+    region = db.relationship("Region", backref="Location")
+
+    def __repr__(self):
+        return f"<User {self.name}>"
+
+
+class Region(db.Model):
+    """
+    Region entity
+
+    Store region data
+    """
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), unique=True, nullable=False)
+
+    country_id = db.Column(db.Integer, db.ForeignKey('country.id'))
+    # TODO: test cascade behaviour
+    country = db.relationship("Country", backref="Region")
+
+    def __repr__(self):
+        return f"<User {self.name}>"
+
+
+class Country(db.Model):
+    """
+    Country entity
+
+    Store country data
+    """
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), unique=True, nullable=False)
 
     def __repr__(self):
         return f"<User {self.name}>"
@@ -224,17 +345,17 @@ class UserSchema(SQLAlchemyAutoSchema):
         sqla_session = db.session
 
 
-class OwnerSchema(SQLAlchemyAutoSchema):
+class PlayerSchema(SQLAlchemyAutoSchema):
     class Meta:
-        model = Owner
+        model = Player
         include_relationships = True
         load_instance = True
         sqla_session = db.session
 
 
-class PetSchema(SQLAlchemyAutoSchema):
+class LocationSchema(SQLAlchemyAutoSchema):
     class Meta:
-        model = Pet
+        model = Location
         include_relationships = True
         load_instance = True
         sqla_session = db.session
@@ -243,6 +364,27 @@ class PetSchema(SQLAlchemyAutoSchema):
 class RoleSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = Role
+        include_relationships = True
+        load_instance = True
+        sqla_session = db.session
+
+class TeamSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = Team
+        include_relationships = True
+        load_instance = True
+        sqla_session = db.session
+
+class RegionSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = Region
+        include_relationships = True
+        load_instance = True
+        sqla_session = db.session
+
+class CountrySchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = Country
         include_relationships = True
         load_instance = True
         sqla_session = db.session
