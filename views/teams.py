@@ -2,7 +2,7 @@ import flask_praetorian
 from flask import request
 from flask_restx import abort, Resource, Namespace
 
-from model import Team, db, TeamSchema
+from model import Team, db, TeamSchema, Player
 
 # namespace declaration
 api_team = Namespace("Teams", "Teams management")
@@ -45,3 +45,18 @@ class TeamListController(Resource):
         db.session.add(team)
         db.session.commit()
         return TeamSchema().dump(team), 201
+
+# TODO: Team points
+@api_team.route("/points/<team_id>")
+class PlayerController(Resource):
+    @flask_praetorian.auth_required
+    def get(self, team_id):
+        team = Player.query.join(Player.puntos).filter_by(team_id=team_id).all()
+        return team
+        #return player.puntos
+
+@api_team.route("/points/")
+class TeamListController(Resource):
+    @flask_praetorian.auth_required
+    def get(self):
+        return TeamSchema(many=True).dump(Team.query.all())

@@ -64,8 +64,12 @@ def login():
     password = request.json.get('password')
     # praetorian authentication
     user = guard.authenticate(username, password)
+
+    # TODO: devolver user id en login
+    id = user.id;
     # get JWT from praetorian
-    ret = {"access_token": guard.encode_jwt_token(user)}
+    ret = {"access_token": guard.encode_jwt_token(user),
+           "id" : id}
     # return JWT
     return jsonify(ret), 200
 
@@ -116,7 +120,6 @@ def authorize():
     ret = {"access_token": guard.encode_jwt_token(user)}
     # return JWT
     return jsonify(ret), 200
-
 
 if __name__ == '__main__':
     # starts app

@@ -21,19 +21,20 @@ class Game1 {
 
     updateClicks() {
         $.ajax({
-            url: 'http://localhost:8080/player/'+this.player,
+            url: 'http://localhost:5000/api/player/'+player,
             dataType: 'json',
             contentType: 'application/json',
             type: 'GET',
+            headers: {'Authorization': 'Bearer ' + jwt},
             crossDomain: true,
             success: this.setClicks
         });
     }
 
     setClicks(data) {
-        document.title = data['name'] + " -> " + data['clicks'] + " v0.1";
+        document.title = data['name'] + " -> " + data['puntos'] + " v0.1";
         $("#player").text(data['name']);
-        $("#clicks").text(data['clicks']);
+        $("#clicks").text(data['puntos']);
     }
 
     click() {
@@ -49,13 +50,16 @@ class Game1 {
     addClicks(n) {
         var data = JSON.stringify({"clicks" : n });
         $.ajax({
-            url: 'http://localhost:8080/addclicks/'+this.player,
+            url: 'http://localhost:5000/api/player/points/'+ player,
+
             dataType: 'json',
             contentType: 'application/json',
             type: 'POST',
             data: data,
+            headers: {'Authorization': 'Bearer ' + jwt},
             crossDomain: true,
-            success: this.setClicks
+            success: this.setClicks,
+
         });
     }
 }

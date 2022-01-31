@@ -2,13 +2,24 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Demo Click v1</title>
+    <title>Clicker</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="js/game1.js"></script>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <script>
+    function getParameterByName(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+
+    const jwt = getParameterByName("jwt");
+    const player = getParameterByName("id");
+    console.log(jwt);
+
     $(document).ready(function(){
         var myGame = new Game1(3);
         myGame.updateClicks();
