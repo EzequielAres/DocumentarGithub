@@ -1,4 +1,7 @@
+import json
+
 import flask_praetorian
+import sqlalchemy
 from flask import request
 from flask_restx import abort, Resource, Namespace
 
@@ -46,17 +49,22 @@ class TeamListController(Resource):
         db.session.commit()
         return TeamSchema().dump(team), 201
 
-# TODO: Team points
+# TODO: Dump query to json
 @api_team.route("/points/<team_id>")
 class PlayerController(Resource):
     @flask_praetorian.auth_required
     def get(self, team_id):
-        team = Player.query.join(Player.puntos).filter_by(team_id=team_id).all()
-        return team
-        #return player.puntos
+        query = sqlalchemy.text('SELECT t.name, SUM(p.puntos) FROM team_players tp INNER JOIN player p ON tp.player_id = p.id INNER JOIN team t ON tp.team_id = t.id WHERE tp.team_id = ' + team_id + ' GROUP BY tp.team_id')
+        result = db.session.execute(query)
+        lista = result.fetchall()
+        return json.dumps(lista)
 
 @api_team.route("/points/")
 class TeamListController(Resource):
     @flask_praetorian.auth_required
     def get(self):
-        return TeamSchema(many=True).dump(Team.query.all())
+        query = sqlalchemy.text('SELECT t.name, SUM(p.puntos) FROM team_players tp INNER JOIN player p ON tp.player_id = p.id INNER JOIN team t ON tp.team_id = t.id GROUP BY tp.team_id ORDER BY SUM(p.puntos) desc')
+        result = db.session.execute(query)
+        lista = result.fetchall()
+        #return TeamSchema(many=True).dump(lista);
+        return json.dumps(lista)

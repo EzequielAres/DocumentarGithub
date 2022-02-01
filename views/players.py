@@ -1,9 +1,15 @@
+import json
+
 import flask_praetorian
 from flask import Flask, render_template, jsonify, request, \
                   redirect, url_for, send_from_directory, session, \
                   abort
 
-from sqlalchemy import desc, select
+import sqlalchemy
+from sqlalchemy import create_engine
+from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey
+from sqlalchemy import inspect
+
 
 
 from flask_restx import abort, Resource, Namespace
@@ -78,6 +84,7 @@ class PlayerController(Resource):
 class PlayerListController(Resource):
     @flask_praetorian.auth_required
     def get(self):
-        result = session.execute(select(puntos))
-        return result.scalars
-        #return PlayerSchema(many=True).dump(Player.query.order_by(desc(Player.puntos)).all())
+        query = sqlalchemy.text('SELECT id, name, puntos FROM player ORDER BY puntos desc')
+        result = db.session.execute(query)
+        lista = result.fetchall()
+        return PlayerSchema(many=True).dump(lista);

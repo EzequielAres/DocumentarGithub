@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Clasificaciones</title>
+    <link rel="stylesheet" href="css/estilo2.css">
+
+</head>
+<body>
+<script>
+    function getParameterByName(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+
+    const jwt = getParameterByName("jwt");
+    const player = getParameterByName("id");
+
+    function peticionClasificacion() {
+        let select = document.getElementById("tipo");
+        let opcion = select.value;
+        console.log(opcion);
+
+        switch (opcion) {
+            case "players":
+                preticionJugadores();
+            case "teams":
+                peticionEquipos();
+            case "locations":
+                peticionLocations();
+            case "regions":
+                peticionRegions();
+            case "countries":
+                peticionCountries();
+            default:
+                console.log("Error");
+        }
+    }
+
+</script>
+    <a href="" id="clasificaciones" class="hud enlaces">Clasificaciones</a>
+    <a href="index.html" id="logout" class="hud enlaces">Logout</a>
+    <section id="formulario">
+        <form class="letras">
+            <label for="tipo">Tipo:</label>
+            <select name="tipo" id="tipo" onchange="peticionClasificacion()">
+              <option value="players">Jugadores</option>
+              <option value="teams">Equipos</option>
+              <option value="locations">Localidades</option>
+                <option value="regions">Regiones</option>
+                <option value="countries">Países</option>
+            </select>
+        </form>
+    </section>
+</body>
+</html>

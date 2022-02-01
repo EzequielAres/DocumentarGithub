@@ -1,4 +1,7 @@
+import json
+
 import flask_praetorian
+import sqlalchemy
 from flask import request
 from flask_restx import abort, Resource, Namespace
 
@@ -45,3 +48,23 @@ class RegionListController(Resource):
         db.session.add(region)
         db.session.commit()
         return RegionSchema().dump(region), 201
+
+# TODO: Dump query to json
+@api_region.route("/points/<region_id>")
+class RegionController(Resource):
+    @flask_praetorian.auth_required
+    def get(self, region_id):
+        query = sqlalchemy.text('SELECT r.name, SUM(p.puntos) FROM player p INNER JOIN location l ON l.id = p.location_id INNER JOIN region r ON r.id = l.region_id WHERE r.id = ' + region_id + ' GROUP BY r.name')
+        result = db.session.execute(query)
+        lista = result.fetchall()
+        return json.dumps(lista)
+
+@api_region.route("/points/")
+class RegionListController(Resource):
+    @flask_praetorian.auth_required
+    def get(self):
+        query = sqlalchemy.text('SELECT r.name, SUM(p.puntos) FROM player p INNER JOIN location l ON l.id = p.location_id INNER JOIN region r ON r.id = l.region_id GROUP BY r.name ORDER BY SUM(p.puntos) desc')
+        result = db.session.execute(query)
+        lista = result.fetchall()
+        #return TeamSchema(many=True).dump(lista);
+        return json.dumps(lista)

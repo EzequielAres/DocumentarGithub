@@ -18,9 +18,11 @@
 
     const jwt = getParameterByName("jwt");
     const player = getParameterByName("id");
-    console.log(jwt);
 
     $(document).ready(function(){
+        let enlace = document.getElementById("clasificaciones");
+        enlace.setAttribute("href", "clasificaciones.html?key=" + jwt + "&id=" + player);
+
         var myGame = new Game1(3);
         myGame.updateClicks();
         $('#rectangle').on("click", function (e) {
@@ -30,6 +32,8 @@
     });
 </script>
 <span id="rectangle"><span id="timer" class="hud"></span></span>
+<a href="" id="clasificaciones" class="hud enlaces">Clasificaciones</a>
+<a href="index.html" id="logout" class="hud enlaces">Logout</a>
 <span id="player" class="hud"></span>
 <span id="clicks" class="hud"></span>
 </body>
