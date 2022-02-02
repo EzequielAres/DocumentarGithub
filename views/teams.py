@@ -2,10 +2,12 @@ import json
 
 import flask_praetorian
 import sqlalchemy
-from flask import request
+from flask import request, jsonify
 from flask_restx import abort, Resource, Namespace
 
+import app
 from model import Team, db, TeamSchema, Player
+
 
 # namespace declaration
 api_team = Namespace("Teams", "Teams management")
@@ -44,7 +46,15 @@ class TeamListController(Resource):
 
     @flask_praetorian.roles_accepted("admin", "editor")
     def post(self):
-        team = TeamSchema().load(request.json)
+        datos = request.json
+
+        if 'imagen' in datos.keys() == True:
+            datos["imagen"].save("/static/imagenes/" + datos["imagen"].filename)
+            datos["imagen"] = "/static/imagenes/" + datos["imagen"].filename
+        else:
+            datos["imagen"] = "/static/imagenes/anon.jpg"
+
+        team = TeamSchema().load(datos)
         db.session.add(team)
         db.session.commit()
         return TeamSchema().dump(team), 201
@@ -54,17 +64,14 @@ class TeamListController(Resource):
 class PlayerController(Resource):
     @flask_praetorian.auth_required
     def get(self, team_id):
-        query = sqlalchemy.text('SELECT t.name, SUM(p.puntos) FROM team_players tp INNER JOIN player p ON tp.player_id = p.id INNER JOIN team t ON tp.team_id = t.id WHERE tp.team_id = ' + team_id + ' GROUP BY tp.team_id')
+        query = sqlalchemy.text('SELECT t.name, SUM(p.puntos) AS puntos FROM team_players tp INNER JOIN player p ON tp.player_id = p.id INNER JOIN team t ON tp.team_id = t.id WHERE tp.team_id = ' + team_id + ' GROUP BY tp.team_id')
         result = db.session.execute(query)
-        lista = result.fetchall()
-        return json.dumps(lista)
+        return jsonify({r['name'] : r['puntos'] for r in result})
 
 @api_team.route("/points/")
 class TeamListController(Resource):
     @flask_praetorian.auth_required
     def get(self):
-        query = sqlalchemy.text('SELECT t.name, SUM(p.puntos) FROM team_players tp INNER JOIN player p ON tp.player_id = p.id INNER JOIN team t ON tp.team_id = t.id GROUP BY tp.team_id ORDER BY SUM(p.puntos) desc')
+        query = sqlalchemy.text('SELECT t.name, SUM(p.puntos) AS puntos FROM team_players tp INNER JOIN player p ON tp.player_id = p.id INNER JOIN team t ON tp.team_id = t.id GROUP BY tp.team_id ORDER BY puntos desc')
         result = db.session.execute(query)
-        lista = result.fetchall()
-        #return TeamSchema(many=True).dump(lista);
-        return json.dumps(lista)
+        return jsonify({r['name'] : r['puntos'] for r in result})

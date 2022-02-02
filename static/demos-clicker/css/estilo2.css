@@ -39,3 +39,28 @@
     border-radius: 0.5rem;
     background: none;
 }
+
+table, tr, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+table {
+    width: 50%;
+    text-align: center;
+    margin: auto;
+}
+
+.encabezado {
+    font-size: 1.3vw;
+    font-family: 'Potta One';
+}
+
+.letrasTabla {
+    font-size: 1vw;
+    font-family: 'Potta One';
+}
+
+.imagenes {
+    width: 4vw;
+}

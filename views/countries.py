@@ -2,7 +2,7 @@ import json
 
 import flask_praetorian
 import sqlalchemy
-from flask import request
+from flask import request, jsonify
 from flask_restx import abort, Resource, Namespace
 
 from model import Country, db, CountrySchema
@@ -54,17 +54,14 @@ class CountryListController(Resource):
 class CountryController(Resource):
     @flask_praetorian.auth_required
     def get(self, country_id):
-        query = sqlalchemy.text('SELECT c.name, SUM(p.puntos) FROM player p INNER JOIN location l ON l.id = p.location_id INNER JOIN region r ON r.id = l.region_id INNER JOIN country c on r.country_id = c.id WHERE r.id = ' + country_id + ' GROUP BY c.name')
+        query = sqlalchemy.text('SELECT c.name, SUM(p.puntos) AS puntos FROM player p INNER JOIN location l ON l.id = p.location_id INNER JOIN region r ON r.id = l.region_id INNER JOIN country c on r.country_id = c.id WHERE r.id = ' + country_id + ' GROUP BY c.name')
         result = db.session.execute(query)
-        lista = result.fetchall()
-        return json.dumps(lista)
+        return jsonify({r['name'] : r['puntos'] for r in result})
 
 @api_country.route("/points/")
 class CountryListController(Resource):
     @flask_praetorian.auth_required
     def get(self):
-        query = sqlalchemy.text('SELECT c.name, SUM(p.puntos) FROM player p INNER JOIN location l ON l.id = p.location_id INNER JOIN region r ON r.id = l.region_id INNER JOIN country c on r.country_id = c.id GROUP BY c.name ORDER BY SUM(p.puntos) desc')
+        query = sqlalchemy.text('SELECT c.name, SUM(p.puntos) AS puntos FROM player p INNER JOIN location l ON l.id = p.location_id INNER JOIN region r ON r.id = l.region_id INNER JOIN country c on r.country_id = c.id GROUP BY c.name ORDER BY SUM(p.puntos) desc')
         result = db.session.execute(query)
-        lista = result.fetchall()
-        #return TeamSchema(many=True).dump(lista);
-        return json.dumps(lista)
+        return jsonify({r['name'] : r['puntos'] for r in result})

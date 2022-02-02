@@ -56,10 +56,12 @@ class PlayerListController(Resource):
     def post(self):
         datos = request.json
 
-        # TODO: Imagen player y team
-        #datos["imagen"].save(app.root_path + "/imagenes/" + datos["imagen"].filename)
+        if 'imagen' in datos.keys() == True:
+            datos["imagen"].save("/static/imagenes/" + datos["imagen"].filename)
+            datos["imagen"] = "/static/imagenes/" + datos["imagen"].filename
+        else:
+            datos["imagen"] = "/static/imagenes/anon.jpg"
 
-        #datos["imagen"] = app.root_path + "/imagenes/" + datos["imagen"].filename
         player = PlayerSchema().load(datos)
         db.session.add(player)
         db.session.commit()
@@ -84,7 +86,7 @@ class PlayerController(Resource):
 class PlayerListController(Resource):
     @flask_praetorian.auth_required
     def get(self):
-        query = sqlalchemy.text('SELECT id, name, puntos FROM player ORDER BY puntos desc')
+        query = sqlalchemy.text('SELECT id, name, puntos, imagen FROM player ORDER BY puntos desc')
         result = db.session.execute(query)
         lista = result.fetchall()
         return PlayerSchema(many=True).dump(lista);

@@ -2,7 +2,7 @@ import json
 
 import flask_praetorian
 import sqlalchemy
-from flask import request
+from flask import request, jsonify
 from flask_restx import abort, Resource, Namespace
 
 from model import Region, db, RegionSchema
@@ -54,17 +54,14 @@ class RegionListController(Resource):
 class RegionController(Resource):
     @flask_praetorian.auth_required
     def get(self, region_id):
-        query = sqlalchemy.text('SELECT r.name, SUM(p.puntos) FROM player p INNER JOIN location l ON l.id = p.location_id INNER JOIN region r ON r.id = l.region_id WHERE r.id = ' + region_id + ' GROUP BY r.name')
+        query = sqlalchemy.text('SELECT r.name, SUM(p.puntos) AS puntos FROM player p INNER JOIN location l ON l.id = p.location_id INNER JOIN region r ON r.id = l.region_id WHERE r.id = ' + region_id + ' GROUP BY r.name')
         result = db.session.execute(query)
-        lista = result.fetchall()
-        return json.dumps(lista)
+        return jsonify({r['name'] : r['puntos'] for r in result})
 
 @api_region.route("/points/")
 class RegionListController(Resource):
     @flask_praetorian.auth_required
     def get(self):
-        query = sqlalchemy.text('SELECT r.name, SUM(p.puntos) FROM player p INNER JOIN location l ON l.id = p.location_id INNER JOIN region r ON r.id = l.region_id GROUP BY r.name ORDER BY SUM(p.puntos) desc')
+        query = sqlalchemy.text('SELECT r.name, SUM(p.puntos) AS puntos FROM player p INNER JOIN location l ON l.id = p.location_id INNER JOIN region r ON r.id = l.region_id GROUP BY r.name ORDER BY SUM(p.puntos) desc')
         result = db.session.execute(query)
-        lista = result.fetchall()
-        #return TeamSchema(many=True).dump(lista);
-        return json.dumps(lista)
+        return jsonify({r['name'] : r['puntos'] for r in result})

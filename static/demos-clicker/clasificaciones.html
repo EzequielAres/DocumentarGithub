@@ -4,42 +4,50 @@
     <meta charset="UTF-8">
     <title>Clasificaciones</title>
     <link rel="stylesheet" href="css/estilo2.css">
-
+        <script src="js/clasificaciones.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
 <script>
-    function getParameterByName(name) {
-        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-        results = regex.exec(location.search);
-        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-    }
 
-    const jwt = getParameterByName("jwt");
-    const player = getParameterByName("id");
+    const jwt = localStorage.getItem("jwt");
+    const player = localStorage.getItem("id");
 
     function peticionClasificacion() {
         let select = document.getElementById("tipo");
         let opcion = select.value;
-        console.log(opcion);
 
         switch (opcion) {
             case "players":
-                preticionJugadores();
+                peticionJugadores();
+                break;
             case "teams":
                 peticionEquipos();
+                break;
             case "locations":
                 peticionLocations();
+                break;
             case "regions":
                 peticionRegions();
+                break;
             case "countries":
                 peticionCountries();
+                break;
             default:
                 console.log("Error");
+                break;
         }
     }
 
+    $(document).ready(function(){
+        let enlace = document.getElementById("inicio");
+        enlace.setAttribute("href", "demo1.html?jwt=" + jwt + "&id=" + player);
+
+        peticionClasificacion();
+    });
+
 </script>
+    <a href="" id="inicio" class="hud enlaces">Inicio</a>
     <a href="" id="clasificaciones" class="hud enlaces">Clasificaciones</a>
     <a href="index.html" id="logout" class="hud enlaces">Logout</a>
     <section id="formulario">
@@ -54,5 +62,8 @@
             </select>
         </form>
     </section>
+    <div id="padre">
+
+    </div>
 </body>
 </html>

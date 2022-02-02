@@ -39,11 +39,11 @@ def seed_db(app, guard):
         ]
 
         teams = [
-            Team(name="Equipo1", imagen=app.root_path + "/imagenes/anon.jpg"),
-            Team(name="Equipo2", imagen=app.root_path + "/imagenes/anon.jpg"),
-            Team(name="Equipo3", imagen=app.root_path + "/imagenes/anon.jpg"),
-            Team(name="Equipo4", imagen=app.root_path + "/imagenes/anon.jpg"),
-            Team(name="Equipo5", imagen=app.root_path + "/imagenes/anon.jpg")
+            Team(name="Equipo1", imagen="/static/imagenes/anon.jpg"),
+            Team(name="Equipo2", imagen="/static/imagenes/anon.jpg"),
+            Team(name="Equipo3", imagen="/static/imagenes/anon.jpg"),
+            Team(name="Equipo4", imagen="/static/imagenes/anon.jpg"),
+            Team(name="Equipo5", imagen="/static/imagenes/anon.jpg")
         ]
 
         users = [
@@ -80,16 +80,16 @@ def seed_db(app, guard):
         ]
 
         players = [
-            Player(name="Ezequiel", user=users[0], puntos=0, teams=[teams[0], teams[1]], imagen=app.root_path + "/imagenes/anon.jpg", location_id=1),
-            Player(name="Paco", user=users[1], puntos=0, teams=[teams[0]], imagen=app.root_path + "/imagenes/anon.jpg", location_id=1),
-            Player(name="Ana", user=users[2], puntos=0, teams=[teams[1], teams[2]], imagen=app.root_path + "/imagenes/anon.jpg", location_id=2),
-            Player(name="María", user=users[3], puntos=0, teams=[teams[0], teams[1], teams[2]], imagen=app.root_path + "/imagenes/anon.jpg", location_id=2),
-            Player(name="Rocío", user=users[4], puntos=0, teams=[teams[2], teams[1]], imagen=app.root_path + "/imagenes/anon.jpg", location_id=3),
-            Player(name="Carmen", user=users[5], puntos=0, teams=[teams[4], teams[1]], imagen=app.root_path + "/imagenes/anon.jpg", location_id=4),
-            Player(name="Rafael", user=users[6], puntos=0, teams=[teams[4], teams[3]], imagen=app.root_path + "/imagenes/anon.jpg", location_id=5),
-            Player(name="Jose", user=users[7], puntos=0, teams=[teams[3], teams[2]], imagen=app.root_path + "/imagenes/anon.jpg", location_id=6),
-            Player(name="Pablo", user=users[8], puntos=0, teams=[teams[4], teams[0]], imagen=app.root_path + "/imagenes/anon.jpg", location_id=7),
-            Player(name="Alex", user=users[9], puntos=0, teams=[teams[2], teams[3]], imagen=app.root_path + "/imagenes/anon.jpg", location_id=8)
+            Player(name="Ezequiel", user=users[0], puntos=0, teams=[teams[0], teams[1]], imagen="/static/imagenes/anon.jpg", location_id=1),
+            Player(name="Paco", user=users[1], puntos=0, teams=[teams[0]], imagen="/static/imagenes/anon.jpg", location_id=1),
+            Player(name="Ana", user=users[2], puntos=0, teams=[teams[1], teams[2]], imagen="/static/imagenes/anon.jpg", location_id=2),
+            Player(name="María", user=users[3], puntos=0, teams=[teams[0], teams[1], teams[2]], imagen="/static/imagenes/anon.jpg", location_id=2),
+            Player(name="Rocío", user=users[4], puntos=0, teams=[teams[2], teams[1]], imagen="/static/imagenes/anon.jpg", location_id=3),
+            Player(name="Carmen", user=users[5], puntos=0, teams=[teams[4], teams[1]], imagen="/static/imagenes/anon.jpg", location_id=4),
+            Player(name="Rafael", user=users[6], puntos=0, teams=[teams[4], teams[3]], imagen="/static/imagenes/anon.jpg", location_id=5),
+            Player(name="Jose", user=users[7], puntos=0, teams=[teams[3], teams[2]], imagen="/static/imagenes/anon.jpg", location_id=6),
+            Player(name="Pablo", user=users[8], puntos=0, teams=[teams[4], teams[0]], imagen="/static/imagenes/anon.jpg", location_id=7),
+            Player(name="Alex", user=users[9], puntos=0, teams=[teams[2], teams[3]], imagen="/static/imagenes/anon.jpg", location_id=8)
         ]
 
         locations = [

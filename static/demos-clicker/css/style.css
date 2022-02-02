@@ -24,6 +24,12 @@
     font-size: 2rem;
 }
 
+#profilePic {
+    top: 0.1rem;
+    right: 9rem;
+    width: 4vw;
+}
+
 #player {
     top: 2.1rem;
     right: 0.5rem;
@@ -42,8 +48,12 @@
     font-size: 0.5rem;
 }
 
-#logout {
+#clasificaciones {
     margin-left: 9vw;
+}
+
+#logout {
+    margin-left: 18vw;
 }
 
 .enlaces {

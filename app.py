@@ -13,6 +13,8 @@ guard = flask_praetorian.Praetorian()
 
 # instantiate flask app
 app = Flask(__name__)
+app.config['JSON_SORT_KEYS'] = False
+
 # get configuration parameters
 app.config.from_object('config')
 

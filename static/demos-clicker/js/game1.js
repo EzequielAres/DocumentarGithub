@@ -21,7 +21,7 @@ class Game1 {
 
     updateClicks() {
         $.ajax({
-            url: 'http://localhost:5000/api/player/'+player,
+            url: 'http://localhost:5000/api/player/' + player,
             dataType: 'json',
             contentType: 'application/json',
             type: 'GET',
