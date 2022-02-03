@@ -32,8 +32,9 @@ class Game1 {
     }
 
     setClicks(data) {
-        document.title = data['name'] + " -> " + data['puntos'] + " v0.1";
-        $("#player").text(data['name']);
+        debugger
+        document.title = data['username'] + " -> " + data['puntos'] + " v0.1";
+        $("#player").text(data['username']);
         $("#clicks").text(data['puntos']);
     }
 

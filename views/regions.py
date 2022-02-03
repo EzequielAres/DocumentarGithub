@@ -65,3 +65,4 @@ class RegionListController(Resource):
         query = sqlalchemy.text('SELECT r.name, SUM(p.puntos) AS puntos FROM player p INNER JOIN location l ON l.id = p.location_id INNER JOIN region r ON r.id = l.region_id GROUP BY r.name ORDER BY SUM(p.puntos) desc')
         result = db.session.execute(query)
         return jsonify({r['name'] : r['puntos'] for r in result})
+

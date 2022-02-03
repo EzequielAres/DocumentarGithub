@@ -16,11 +16,11 @@
 
         td1.innerHTML = "Nombre del jugador";
         td2.innerHTML = "Puntos";
-        td3.innerHTML = "Imagen"
+        td3.innerHTML = "Imagen";
 
-        td3.classList.add("encabezado")
-        td1.classList.add("encabezado")
-        td2.classList.add("encabezado")
+        td3.classList.add("encabezado");
+        td1.classList.add("encabezado");
+        td2.classList.add("encabezado");
 
         tr.appendChild(td3);
         tr.appendChild(td1);
@@ -42,7 +42,7 @@
 
             td3.appendChild(imagen);
 
-            td1.innerHTML = datos[jugador]["name"];
+            td1.innerHTML = datos[jugador]["username"];
             td2.innerHTML = datos[jugador]["puntos"];
 
             tr.appendChild(td3);
@@ -77,30 +77,43 @@
         div.appendChild(table)
 
         let tr = document.createElement("tr");
+        let td3 = document.createElement("td");
+        let imagen = document.createElement("img");
         let td1 = document.createElement("td");
         let td2 = document.createElement("td");
 
+        td3.innerHTML = "Imagen";
         td1.innerHTML = "Nombre del equipos";
         td2.innerHTML = "Puntos";
 
-        td1.classList.add("encabezado")
-        td2.classList.add("encabezado")
+        td3.classList.add("encabezado");
+        td1.classList.add("encabezado");
+        td2.classList.add("encabezado");
 
+        tr.appendChild(td3);
         tr.appendChild(td1);
         tr.appendChild(td2);
         table.appendChild(tr);
 
         for (equipo in datos) {
             let tr = document.createElement("tr");
+            let td3 = document.createElement("td");
+            let imagen = document.createElement("img");
             let td1 = document.createElement("td");
             let td2 = document.createElement("td");
 
+            imagen.setAttribute("src", datos[equipo]["imagen"]);
+
             td1.classList.add("letrasTabla")
             td2.classList.add("letrasTabla")
+            imagen.classList.add("imagenes");
+
+            td3.appendChild(imagen);
 
             td1.innerHTML = equipo;
-            td2.innerHTML = datos[equipo];
+            td2.innerHTML = datos[equipo]['puntos'];
 
+            tr.appendChild(td3);
             tr.appendChild(td1);
             tr.appendChild(td2);
             table.appendChild(tr);

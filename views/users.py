@@ -1,5 +1,5 @@
 import flask_praetorian
-from flask import request
+from flask import request, current_app
 from flask_restx import abort, Resource, Namespace
 
 from model import User, db, UserSchema
@@ -53,6 +53,11 @@ class UserListController(Resource):
     @flask_praetorian.roles_required("admin")
     def post(self):
         user = UserSchema().load(request.json)
+
+        guard = flask_praetorian.Praetorian()
+        guard.init_app(current_app, User)
+        user.hashed_password = guard.hash_password(user.hashed_password)
+
         # add new user
         db.session.add(user)
         db.session.commit()

@@ -59,7 +59,6 @@ class TeamListController(Resource):
         db.session.commit()
         return TeamSchema().dump(team), 201
 
-# TODO: Dump query to json
 @api_team.route("/points/<team_id>")
 class PlayerController(Resource):
     @flask_praetorian.auth_required
@@ -72,6 +71,6 @@ class PlayerController(Resource):
 class TeamListController(Resource):
     @flask_praetorian.auth_required
     def get(self):
-        query = sqlalchemy.text('SELECT t.name, SUM(p.puntos) AS puntos FROM team_players tp INNER JOIN player p ON tp.player_id = p.id INNER JOIN team t ON tp.team_id = t.id GROUP BY tp.team_id ORDER BY puntos desc')
+        query = sqlalchemy.text('SELECT t.imagen, t.name, SUM(p.puntos) AS puntos FROM team_players tp INNER JOIN player p ON tp.player_id = p.id INNER JOIN team t ON tp.team_id = t.id GROUP BY tp.team_id ORDER BY puntos desc')
         result = db.session.execute(query)
-        return jsonify({r['name'] : r['puntos'] for r in result})
+        return jsonify({r['name']:  {'puntos': r['puntos'], "imagen": r["imagen"]} for r in result})

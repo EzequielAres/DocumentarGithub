@@ -45,6 +45,21 @@ class PlayerController(Resource):
         db.session.commit()
         return PlayerSchema().dump(new_player)
 
+@api_player.route("/subir/<player_id>", methods=['POST'])
+class PlayerController(Resource):
+    @flask_praetorian.auth_required
+    def subir(self, player_id):
+        player = Player.query.get_or_404(player_id)
+
+        archivo = request.files['archivo']
+        carpeta = app.root_path
+
+        archivo.save(carpeta + "/archivos/" + archivo.filename)
+
+        player.imagen = "/static/imagenes/" + archivo
+
+        db.session.commit()
+        return PlayerSchema().dump(player)
 
 @api_player.route("/")
 class PlayerListController(Resource):
@@ -56,11 +71,7 @@ class PlayerListController(Resource):
     def post(self):
         datos = request.json
 
-        if 'imagen' in datos.keys() == True:
-            datos["imagen"].save("/static/imagenes/" + datos["imagen"].filename)
-            datos["imagen"] = "/static/imagenes/" + datos["imagen"].filename
-        else:
-            datos["imagen"] = "/static/imagenes/anon.jpg"
+        datos["imagen"] = "/static/imagenes/anon.jpg"
 
         player = PlayerSchema().load(datos)
         db.session.add(player)
@@ -80,13 +91,13 @@ class PlayerController(Resource):
         player = Player.query.get_or_404(player_id)
         player.puntos += datos["clicks"]
         db.session.commit()
-        return 201
+        return PlayerSchema().dump(player), 201
 
 @api_player.route("/points/")
 class PlayerListController(Resource):
     @flask_praetorian.auth_required
     def get(self):
-        query = sqlalchemy.text('SELECT id, name, puntos, imagen FROM player ORDER BY puntos desc')
+        query = sqlalchemy.text('SELECT id, username, puntos, imagen FROM player ORDER BY puntos desc')
         result = db.session.execute(query)
         lista = result.fetchall()
         return PlayerSchema(many=True).dump(lista);

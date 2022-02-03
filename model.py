@@ -6,7 +6,7 @@ from sqlalchemy_utils import database_exists
 db = SQLAlchemy()
 
 
-def init_db(app, guard):
+def init_db(app, guard, testing=False):
     """
     Initializes database
 
@@ -14,7 +14,7 @@ def init_db(app, guard):
     :param guard: praetorian object for password hashing if seeding needed
     """
     db.init_app(app)
-    if not database_exists(app.config['SQLALCHEMY_DATABASE_URI']):
+    if testing or not database_exists(app.config['SQLALCHEMY_DATABASE_URI']):
         # if there is no database file
         # migrate model
         db.create_all(app=app)
@@ -80,16 +80,16 @@ def seed_db(app, guard):
         ]
 
         players = [
-            Player(name="Ezequiel", user=users[0], puntos=0, teams=[teams[0], teams[1]], imagen="/static/imagenes/anon.jpg", location_id=1),
-            Player(name="Paco", user=users[1], puntos=0, teams=[teams[0]], imagen="/static/imagenes/anon.jpg", location_id=1),
-            Player(name="Ana", user=users[2], puntos=0, teams=[teams[1], teams[2]], imagen="/static/imagenes/anon.jpg", location_id=2),
-            Player(name="María", user=users[3], puntos=0, teams=[teams[0], teams[1], teams[2]], imagen="/static/imagenes/anon.jpg", location_id=2),
-            Player(name="Rocío", user=users[4], puntos=0, teams=[teams[2], teams[1]], imagen="/static/imagenes/anon.jpg", location_id=3),
-            Player(name="Carmen", user=users[5], puntos=0, teams=[teams[4], teams[1]], imagen="/static/imagenes/anon.jpg", location_id=4),
-            Player(name="Rafael", user=users[6], puntos=0, teams=[teams[4], teams[3]], imagen="/static/imagenes/anon.jpg", location_id=5),
-            Player(name="Jose", user=users[7], puntos=0, teams=[teams[3], teams[2]], imagen="/static/imagenes/anon.jpg", location_id=6),
-            Player(name="Pablo", user=users[8], puntos=0, teams=[teams[4], teams[0]], imagen="/static/imagenes/anon.jpg", location_id=7),
-            Player(name="Alex", user=users[9], puntos=0, teams=[teams[2], teams[3]], imagen="/static/imagenes/anon.jpg", location_id=8)
+            Player(username="Ezequiel", user=users[0], puntos=0, teams=[teams[0], teams[1]], imagen="/static/imagenes/anon.jpg", location_id=1),
+            Player(username="Paco", user=users[1], puntos=0, teams=[teams[0]], imagen="/static/imagenes/anon.jpg", location_id=1),
+            Player(username="Ana", user=users[2], puntos=0, teams=[teams[1], teams[2]], imagen="/static/imagenes/anon.jpg", location_id=2),
+            Player(username="María", user=users[3], puntos=0, teams=[teams[0], teams[1], teams[2]], imagen="/static/imagenes/anon.jpg", location_id=2),
+            Player(username="Rocío", user=users[4], puntos=0, teams=[teams[2], teams[1]], imagen="/static/imagenes/anon.jpg", location_id=3),
+            Player(username="Carmen", user=users[5], puntos=0, teams=[teams[4], teams[1]], imagen="/static/imagenes/anon.jpg", location_id=4),
+            Player(username="Rafael", user=users[6], puntos=0, teams=[teams[4], teams[3]], imagen="/static/imagenes/anon.jpg", location_id=5),
+            Player(username="Jose", user=users[7], puntos=0, teams=[teams[3], teams[2]], imagen="/static/imagenes/anon.jpg", location_id=6),
+            Player(username="Pablo", user=users[8], puntos=0, teams=[teams[4], teams[0]], imagen="/static/imagenes/anon.jpg", location_id=7),
+            Player(username="Alex", user=users[9], puntos=0, teams=[teams[2], teams[3]], imagen="/static/imagenes/anon.jpg", location_id=8)
         ]
 
         locations = [
@@ -256,22 +256,20 @@ class Player(db.Model):
     Store player data
     """
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), unique=False, nullable=False)
+    username = db.Column(db.String(80), unique=False, nullable=False)
     puntos = db.Column(db.Integer, nullable=False)
     imagen = db.Column(db.String(150), unique=False, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    # TODO: test cascade behaviour
     user = db.relationship("User", backref=db.backref("player", uselist=False))
 
     teams = db.relationship('Team', secondary=team_players)
     is_active = db.Column(db.Boolean, default=True, server_default="true")
 
     location_id = db.Column(db.Integer, db.ForeignKey('location.id'))
-    # TODO: test cascade behaviour
     location = db.relationship("Location", backref="Player")
 
     def __repr__(self):
-        return f"<User {self.name}>"
+        return f"<User {self.username}>"
 
 
 class Team(db.Model):
@@ -298,7 +296,6 @@ class Location(db.Model):
     name = db.Column(db.String(100), unique=True, nullable=False)
 
     region_id = db.Column(db.Integer, db.ForeignKey('region.id'))
-    # TODO: test cascade behaviour
     region = db.relationship("Region", backref="Location")
 
     def __repr__(self):
@@ -315,7 +312,6 @@ class Region(db.Model):
     name = db.Column(db.String(100), unique=True, nullable=False)
 
     country_id = db.Column(db.Integer, db.ForeignKey('country.id'))
-    # TODO: test cascade behaviour
     country = db.relationship("Country", backref="Region")
 
     def __repr__(self):
