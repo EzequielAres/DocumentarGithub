@@ -1,3 +1,5 @@
+import io
+
 import pytest
 from app import create_app
 from werkzeug.datastructures import Headers
@@ -120,3 +122,20 @@ def test_getPlayersPoints(client):
   'imagen': '/static/imagenes/anon.jpg',
   'puntos': 0,
   'username': 'Ezequiel'} in [d for d in rsp];
+
+
+def test_postPlayerImage(client):
+    rv = client.post('/login', json={'username': 'Ezequiel', 'password': 'pestillo'})
+    rsp = rv.get_json()
+    assert 'access_token' in rsp.keys()
+
+    headers = Headers()
+    headers.add('Authorization', f"Bearer {rsp['access_token']}")
+
+    data = {'imagen' : ""}
+    data['imagen'] = (io.BytesIO(b"abcdef"), 'test.jpg')
+    rv = client.post("/api/player/subir/1", data=data, headers=headers, follow_redirects=True, content_type='multipart/form-data')
+    rsp = rv.get_json()
+
+    assert rsp.get("imagen") == "/static/imagenes/test.jpg"
+

@@ -2,7 +2,7 @@ import json
 
 import flask_praetorian
 import sqlalchemy
-from flask import request, jsonify
+from flask import request, jsonify, current_app
 from flask_restx import abort, Resource, Namespace
 
 import app
@@ -58,6 +58,22 @@ class TeamListController(Resource):
         db.session.add(team)
         db.session.commit()
         return TeamSchema().dump(team), 201
+
+@api_team.route("/subir/<team_id>")
+class TeamImageController(Resource):
+    @flask_praetorian.auth_required
+    def post(self, team_id):
+        team = Team.query.get_or_404(team_id)
+
+        imagen = request.files['imagen']
+        carpeta = current_app.root_path
+
+        imagen.save(carpeta + "/static/imagenes/" + imagen.filename)
+
+        team.imagen = "/static/imagenes/" + imagen.filename
+
+        db.session.commit()
+        return TeamSchema().dump(team)
 
 @api_team.route("/points/<team_id>")
 class PlayerController(Resource):

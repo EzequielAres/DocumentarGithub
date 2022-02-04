@@ -3,7 +3,7 @@ import json
 import flask_praetorian
 from flask import Flask, render_template, jsonify, request, \
                   redirect, url_for, send_from_directory, session, \
-                  abort
+                  abort, current_app
 
 import sqlalchemy
 from sqlalchemy import create_engine
@@ -45,18 +45,18 @@ class PlayerController(Resource):
         db.session.commit()
         return PlayerSchema().dump(new_player)
 
-@api_player.route("/subir/<player_id>", methods=['POST'])
-class PlayerController(Resource):
+@api_player.route("/subir/<player_id>")
+class PlayerImageController(Resource):
     @flask_praetorian.auth_required
-    def subir(self, player_id):
+    def post(self, player_id):
         player = Player.query.get_or_404(player_id)
 
-        archivo = request.files['archivo']
-        carpeta = app.root_path
+        imagen = request.files['imagen']
+        carpeta = current_app.root_path
 
-        archivo.save(carpeta + "/archivos/" + archivo.filename)
+        imagen.save(carpeta + "/static/imagenes/" + imagen.filename)
 
-        player.imagen = "/static/imagenes/" + archivo
+        player.imagen = "/static/imagenes/" + imagen.filename
 
         db.session.commit()
         return PlayerSchema().dump(player)
