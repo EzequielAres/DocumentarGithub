@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Inicio</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <form id="form" action="" method="get">
+        <label for="username">Usuario:
+            <input type="text" id="username" name="username"></label>
+        <label for="password">Password:
+            <input type="password" id="password" name="password"></label>
+        <input type="submit" name="Login">
+    </form>
+
+    <script>
+        function peticionLogin() {
+
+            let username = document.getElementById("username");
+            let password = document.getElementById("password")
+
+            var data = JSON.stringify({"username" : username.value ,
+                                        "password" : password.value });
+
+            $.ajax({
+                url: 'http://localhost:5000/login',
+                dataType: 'json',
+                contentType: 'application/json',
+                type: 'POST',
+                data: data,
+                crossDomain: true,
+                success: function(respuesta) {
+                    localStorage.setItem('jwt', respuesta["access_token"]);
+                    localStorage.setItem('id', respuesta["id"]);
+                    window.location.href = 'http://localhost:5000/static/demos-clicker/demo1.html';
+                }, error: function () {
+                    console.log("Error");
+                }
+            });
+        }
+
+        const form = document.getElementById('form');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            localStorage.clear();
+
+            peticionLogin();
+        });
+    </script>
+</body>
+</html>
