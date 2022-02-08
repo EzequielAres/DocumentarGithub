@@ -19,11 +19,13 @@ y configuramos el entorno virtual donde se ejecutará el proyecto.
 En cuanto a la autenticación tenemos dos métodos en el proyecto:
 
     1. Vía formulario
+
        Con este método simplemente obtenemos el usuario y contraseña introducidos mediante un json y comprobamos
        mediante praetorian la autenticación y devolvemos un jwt
 ![img_9.png](ImagenesDocumentacion/img_9.png)
 
     2. Vía Github
+
        Este método tendremos que realizarlo mediante el navegador ya que nos llevará a la página de
        acceso de github y, al comprobar el usuario devuelve un jwt.
 
@@ -83,4 +85,9 @@ Si entramos *"http://127.0.0.1:5000/api/docs"* tendremos acceso a una documentac
 
 ## Test unitarios
 El proyecto dispone de un conjunto de test unitarios para comprobar el correcto funcionamiento de los puntos de entrada
-de la API REST, estos test se encuentan en la carpeta *"/tests/"* y tendremos un archivo .py para cada entidad del modelo y sus funciones.
+de la API REST, estos test se encuentan en la carpeta *"/tests/"* y tendremos un archivo .py para cada entidad del modelo y sus funciones. 
+Ej:
+
+![img_14.png](ImagenesDocumentacion/img_14.png)
+
+## Autor: Ezequiel Ares Rodríguez
